@@ -15,6 +15,7 @@
 | M5 占床日历 | 按当地午夜切分占床 | `/api/m5` | `app/modules/m5_calendar/rules.py` `app/modules/m5_calendar/service.py` | `tests/test_m5_calendar.py` |
 | M6 病区对账 | 核对分段与日历分钟 | `/api/m6` | `app/modules/m6_reconcile/rules.py` `app/modules/m6_reconcile/service.py` | `tests/test_m6_reconcile.py` |
 | M7 补传重算 | 标记迟到并复核补传 | `/api/m7` | `app/modules/m7_replay/rules.py` `app/modules/m7_replay/service.py` | `tests/test_m7_replay.py` |
+| M8 结算床日 | 每日结算床日归属与对账 | `/api/m8` | `app/modules/m8_settlement/rules.py` `app/modules/m8_settlement/service.py` | `tests/test_m8_settlement.py` |
 
 ## 陷阱登记
 
@@ -28,6 +29,8 @@
 | TRAP-14 | 同版事件矛盾 | 覆盖或重复计数 | 显式检查保留证据 | `app/modules/m3_episodes/rules.py` | `tests/test_m3_episodes.py::test_same_version_conflict` |
 | TRAP-23 | 相接转床端点 | 覆盖或重复计数 | 显式检查保留证据 | `app/modules/m4_conflicts/rules.py` | `tests/test_m4_conflicts.py::test_touching_not_overlap` |
 | TRAP-26 | 旧版复核 | 覆盖或重复计数 | 显式检查保留证据 | `app/store.py` | `tests/test_m7_replay.py::test_optimistic_lock` |
+| TRAP-31 | 同日转床重复计床日 | 一患者一天多张床日 | 患者日唯一归属，分钟留明细 | `app/modules/m8_settlement/rules.py` | `tests/test_m8_settlement.py::test_same_day_transfer_one_bed_day` |
+| TRAP-32 | 补传重复提交 | 重复生成床位日 | 内容寻址批次复用同批 | `app/store.py` | `tests/test_m8_settlement.py::test_replay_same_batch_no_duplicate` |
 
 ## 对账规则
 

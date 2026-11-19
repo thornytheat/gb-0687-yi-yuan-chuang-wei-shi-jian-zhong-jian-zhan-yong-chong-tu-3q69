@@ -54,6 +54,21 @@ def create_app():
         for row in result["quarantine"]:
             writer.writerow([result["manifest"]["run_id"],row["line"],row["key"],row["code"],json.dumps(row,ensure_ascii=False)])
         return Response("\ufeff"+stream.getvalue(),content_type="text/csv; charset=utf-8",headers={"Content-Disposition":"attachment; filename=evidence.csv"})
+    @app.get("/api/settlement.csv")
+    def settlement_csv():
+        result=store.fetch(request.args["run"]) if request.args.get("run") else run()
+        data=result.get("settlement")
+        if data is None: raise DomainError("STAGE","\u8be5\u6279\u6b21\u4e0d\u542b\u7ed3\u7b97\u5e8a\u65e5\uff0c\u8bf7\u91cd\u65b0\u8fd0\u884c",404)
+        run_id=result["manifest"]["run_id"]
+        stream=io.StringIO(newline="");writer=csv.writer(stream)
+        writer.writerow(["\u7c7b\u522b","\u6279\u6b21","\u65e5\u671f","\u60a3\u8005\u53f7","\u5f52\u5c5e\u75c5\u533a","\u5e8a\u4f4d\u65e5","\u5360\u5e8a\u5206\u949f","\u65e5\u5386\u5206\u949f","\u5206\u6bb5\u5206\u949f","\u5dee\u5f02\u5206\u949f","\u75c5\u533a\u660e\u7ec6","\u5f52\u5c5e\u8bf4\u660e","\u72b6\u6001"])
+        for row in data["rows"]:
+            writer.writerow(["\u7ed3\u7b97\u5e8a\u65e5",run_id,row["date"],row["patient"],row["ward"],1,row["minutes"],"","", "", row["wards_text"],row["basis"],row["state"]])
+        for day in data["ward_days"]:
+            writer.writerow(["\u75c5\u533a\u65e5\u5408\u8ba1",run_id,day["date"],"",day["ward"],day["bed_days"],day["minutes"],day["calendar_minutes"],"",day["delta"],"","",day["state"]])
+        for total in data["ward_totals"]:
+            writer.writerow(["\u75c5\u533a\u5408\u8ba1",run_id,"","",total["ward"],total["bed_days"],total["minutes"],total["calendar_minutes"],total["episode_minutes"],total["delta"],"","",total["state"]])
+        return Response("\ufeff"+stream.getvalue(),content_type="text/csv; charset=utf-8",headers={"Content-Disposition":"attachment; filename=settlement.csv"})
     for n,name in enumerate(STAGES,1): app.register_blueprint(import_module(f"app.modules.m{n}_{name}.handler").bp)
     return app
 app=create_app()

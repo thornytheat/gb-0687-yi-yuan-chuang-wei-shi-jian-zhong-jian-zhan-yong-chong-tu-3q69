@@ -3,9 +3,10 @@ from app import store
 from app.pipeline import run
 from app.config import TITLE,MODULES,STAGES,COLUMNS,SAMPLES,DEFAULTS
 def view(stage):
-    if not 1<=stage<=7: return "页面不存在",404
+    if not 1<=stage<=len(STAGES): return "页面不存在",404
     run_id=request.args.get("run")
     result=store.fetch(run_id) if run_id else run()
+    if stage>len(result["stages"]): return "该批次生成于结算阶段上线前，请重新运行",409
     sample=(SAMPLES/"dirty.csv").read_text(encoding="utf-8-sig")
     data=result["stages"][stage-1]
     from datetime import datetime

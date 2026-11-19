@@ -12,7 +12,7 @@ docker compose exec -T app pytest -q
 docker compose config --quiet
 ```
 
-浏览器访问 http://localhost:18201 。首页已装载脏样例，可编辑CSV与参数后运行，也可上传文件。七个导航分别对应业务步骤。
+浏览器访问 http://localhost:18201 。首页已装载脏样例，可编辑CSV与参数后运行，也可上传文件。八个导航分别对应业务步骤。
 
 ## 模块
 
@@ -23,6 +23,7 @@ docker compose config --quiet
 - M5 占床日历：按当地午夜切分占床，入口 `/m/5`、`GET/POST /api/m5`。
 - M6 病区对账：核对分段与日历分钟，入口 `/m/6`、`GET/POST /api/m6`。
 - M7 补传重算：标记迟到并复核补传，入口 `/m/7`、`GET/POST /api/m7`。
+- M8 结算床日：每日每患者归属一张床位日并对账，入口 `/m/8`、`GET/POST /api/m8`。
 
 ## 演示与复核
 
